@@ -1,6 +1,6 @@
 {
   "expo": {
-    "name": "quicksale",
+    "name": "QuickSale",
     "slug": "quicksale",
     "version": "1.0.0",
     "orientation": "portrait",
@@ -19,7 +19,10 @@
       "adaptiveIcon": {
         "foregroundImage": "./assets/quicksale-app-icon.png",
         "backgroundColor": "#2C3E50"
-      }
+      },
+      "package": "com.yourcompany.quicksale",
+      "versionCode": 1,
+      "permissions": []
     },
     "web": {
       "favicon": "./assets/quicksale-favicon.png"
