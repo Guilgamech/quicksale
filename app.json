@@ -20,7 +20,11 @@
         "foregroundImage": "./assets/quicksale-app-icon.png",
         "backgroundColor": "#2C3E50"
       },
-      "package": "com.yourcompany.quicksale"
+      "package": "com.yourcompany.quicksale",
+      "permissions": [
+        "WRITE_EXTERNAL_STORAGE",
+        "READ_EXTERNAL_STORAGE"
+      ]
     },
     "web": {
       "favicon": "./assets/quicksale-favicon.png"

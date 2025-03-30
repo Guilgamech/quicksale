@@ -3,7 +3,8 @@ import { StatusBar } from 'expo-status-bar';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
-import { Image, Text, View, ActivityIndicator, LogBox } from 'react-native';
+import { Image, Text, View, ActivityIndicator, Alert } from 'react-native';
+import * as FileSystem from 'expo-file-system';
 
 // Import screens
 import HomeScreen from './src/screens/HomeScreen';
@@ -11,82 +12,54 @@ import ProductsScreen from './src/screens/ProductsScreen';
 import SalesScreen from './src/screens/SalesScreen';
 import ReportsScreen from './src/screens/ReportsScreen';
 
-// Initialize database
+// Import database initialization
 import { initDatabase } from './src/database';
-
-// Ignore specific warnings that might be causing issues
-LogBox.ignoreLogs([
-  'Non-serializable values were found in the navigation state',
-  'Possible Unhandled Promise Rejection'
-]);
 
 const Stack = createNativeStackNavigator();
 
 export default function App() {
-  const [isReady, setIsReady] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  // Initialize app
   useEffect(() => {
-    const prepare = async () => {
+    const setupApp = async () => {
       try {
-        // Initialize database with retry mechanism
-        let retries = 3;
-        while (retries > 0) {
-          try {
-            await initDatabase();
-            break; // Success, exit the retry loop
-          } catch (dbError) {
-            console.error(`Database initialization attempt failed, ${retries} retries left:`, dbError);
-            retries--;
-            if (retries === 0) throw dbError;
-            // Wait before retrying
-            await new Promise(resolve => setTimeout(resolve, 1000));
-          }
-        }
+        // Initialize database
+        await initDatabase();
         
-        // Add a delay to ensure everything is loaded
-        await new Promise(resolve => setTimeout(resolve, 1000));
+        // Short delay to ensure everything is loaded
+        await new Promise(resolve => setTimeout(resolve, 500));
         
-        setIsReady(true);
-      } catch (e) {
-        console.error("Initialization error:", e);
-        setError(e.message || "Unknown error during initialization");
+        setIsLoading(false);
+      } catch (err) {
+        console.error("Error initializing app:", err);
+        setError(err.message);
+        setIsLoading(false);
+        
+        // Show error alert
+        Alert.alert(
+          "Error de Inicialización",
+          "No se pudo inicializar la aplicación: " + err.message,
+          [{ text: "OK" }]
+        );
       }
     };
 
-    prepare();
+    setupApp();
   }, []);
 
-  // Show loading screen while initializing
-  if (!isReady) {
+  if (isLoading) {
     return (
-      <SafeAreaProvider>
-        <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: '#ECF0F1' }}>
-          {error ? (
-            <View style={{ padding: 20 }}>
-              <Text style={{ color: 'red', fontSize: 16, textAlign: 'center', marginBottom: 10 }}>
-                Error initializing app:
-              </Text>
-              <Text style={{ color: 'red', fontSize: 14 }}>
-                {error}
-              </Text>
-            </View>
-          ) : (
-            <>
-              <ActivityIndicator size="large" color="#2C3E50" />
-              <Text style={{ marginTop: 20, color: '#2C3E50' }}>Cargando QuickSale...</Text>
-            </>
-          )}
-        </View>
-      </SafeAreaProvider>
+      <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: '#ECF0F1' }}>
+        <ActivityIndicator size="large" color="#2C3E50" />
+        <Text style={{ marginTop: 20, color: '#2C3E50' }}>Iniciando QuickSale...</Text>
+      </View>
     );
   }
 
-  // Main app
   return (
     <SafeAreaProvider>
-      <NavigationContainer fallback={<ActivityIndicator color="#2C3E50" size="large" />}>
+      <NavigationContainer>
         <Stack.Navigator
           initialRouteName="Home"
           screenOptions={{
