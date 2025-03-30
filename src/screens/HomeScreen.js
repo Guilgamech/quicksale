@@ -4,6 +4,7 @@ import { useNavigation, useFocusEffect } from '@react-navigation/native';
 import Button from '../components/Button';
 import { getVentas } from '../database/ventas';
 import { getProductos } from '../database/productos';
+import { Image } from 'react-native';
 
 const HomeScreen = () => {
   const navigation = useNavigation();
@@ -51,7 +52,7 @@ const HomeScreen = () => {
   
   return (
     <SafeAreaView className="flex-1 bg-background">
-      {/* Header with extra top margin */}
+      {/* Header with logo */}
       <View className="bg-primary pt-safe-top pb-4 px-5" style={{
         shadowColor: '#000',
         shadowOffset: { width: 0, height: 2 },
@@ -59,7 +60,12 @@ const HomeScreen = () => {
         shadowRadius: 4,
         elevation: 3
       }}>
-        <View className="container mx-auto">
+        <View className="container mx-auto flex-row items-center">
+          <Image 
+            source={require('../../assets/quicksale-in-app-logo.png')} 
+            style={{ width: 30, height: 30 }}
+            className="mr-2"
+          />
           <Text className="text-white text-2xl font-bold">QuickSales</Text>
         </View>
       </View>

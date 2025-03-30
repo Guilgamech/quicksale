@@ -1,34 +1,84 @@
+import React from 'react';
 import { StatusBar } from 'expo-status-bar';
-import { useEffect } from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import { HomeScreen, ProductsScreen, SalesScreen, ReportsScreen } from './src/screens';
-import { initDatabase } from './src/database/index';
+import { SafeAreaProvider } from 'react-native-safe-area-context';
+import { Image, Text } from 'react-native';
+
+// Import screens
+import HomeScreen from './src/screens/HomeScreen';
+import ProductsScreen from './src/screens/ProductsScreen';
+import SalesScreen from './src/screens/SalesScreen';
+import ReportsScreen from './src/screens/ReportsScreen';
+
+// Initialize database
+import './src/database';
 
 const Stack = createNativeStackNavigator();
 
 export default function App() {
-  useEffect(() => {
-    initDatabase()
-      .then(() => console.log('Base de datos inicializada correctamente'))
-      .catch(error => console.error('Error al inicializar la base de datos:', error));
-  }, []);
-
   return (
-    <NavigationContainer>
-      <Stack.Navigator 
-        initialRouteName="Home"
-        screenOptions={{
-          headerShown: false,
-          contentStyle: { backgroundColor: '#F9FAFB' }
-        }}
-      >
-        <Stack.Screen name="Home" component={HomeScreen} />
-        <Stack.Screen name="Products" component={ProductsScreen} />
-        <Stack.Screen name="Sales" component={SalesScreen} />
-        <Stack.Screen name="Reports" component={ReportsScreen} />
-      </Stack.Navigator>
-      <StatusBar style="auto" />
-    </NavigationContainer>
+    <SafeAreaProvider>
+      <NavigationContainer>
+        <Stack.Navigator
+          initialRouteName="Home"
+          screenOptions={{
+            headerStyle: {
+              backgroundColor: '#2C3E50',
+            },
+            headerTintColor: '#fff',
+            headerTitleStyle: {
+              fontWeight: 'bold',
+            },
+            headerLeft: (props) => (
+              props.canGoBack ? (
+                <>
+                  <Text style={{ color: '#fff' }}>{props.label}</Text>
+                  <Image 
+                    source={require('./assets/quicksale-in-app-logo.png')} 
+                    style={{ width: 24, height: 24, marginRight: 8 }}
+                  />
+                </>
+              ) : (
+                <Image 
+                  source={require('./assets/quicksale-in-app-logo.png')} 
+                  style={{ width: 24, height: 24, marginRight: 8 }}
+                />
+              )
+            ),
+          }}
+        >
+          <Stack.Screen 
+            name="Home" 
+            component={HomeScreen} 
+            options={{ 
+              headerShown: false 
+            }} 
+          />
+          <Stack.Screen 
+            name="Products" 
+            component={ProductsScreen} 
+            options={{ 
+              headerShown: false 
+            }} 
+          />
+          <Stack.Screen 
+            name="Sales" 
+            component={SalesScreen} 
+            options={{ 
+              headerShown: false 
+            }} 
+          />
+          <Stack.Screen 
+            name="Reports" 
+            component={ReportsScreen} 
+            options={{ 
+              headerShown: false 
+            }} 
+          />
+        </Stack.Navigator>
+      </NavigationContainer>
+      <StatusBar style="light" />
+    </SafeAreaProvider>
   );
 }
