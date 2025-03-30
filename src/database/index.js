@@ -1,8 +1,21 @@
 import * as SQLite from 'expo-sqlite';
 
 // Open or create the database
-const db = SQLite.openDatabaseSync('ventas.db');
-let isInitialized = false;
+let db;
+try {
+  db = SQLite.openDatabaseSync('ventas.db');
+  console.log("Database opened successfully");
+} catch (error) {
+  console.error("Error opening database:", error);
+  // Fallback to try again
+  try {
+    db = SQLite.openDatabaseSync('ventas.db');
+    console.log("Database opened successfully on second attempt");
+  } catch (fallbackError) {
+    console.error("Fatal error opening database:", fallbackError);
+    // We'll handle this in the initDatabase function
+  }
+}
 
 export const getDatabase = () => {
   return db;
@@ -10,9 +23,8 @@ export const getDatabase = () => {
 
 // Wrapper for executing SQL queries asynchronously
 export const execQueryAsync = async (query, params = []) => {
-  // Make sure database is initialized before any query
-  if (!isInitialized) {
-    await initDatabase();
+  if (!db) {
+    throw new Error("Database not initialized");
   }
   
   try {
@@ -65,22 +77,20 @@ const checkTablesExist = async () => {
 
 // Initialize the database
 export const initDatabase = async () => {
-  // If already initialized, return early
-  if (isInitialized) {
-    return true;
-  }
-  
-  // Check if tables already exist
-  const tablesExist = await checkTablesExist();
-  
-  if (tablesExist) {
-    console.log("Database already initialized");
-    isInitialized = true;
-    return true;
+  if (!db) {
+    throw new Error("Cannot initialize database - connection failed");
   }
   
   try {
-    console.log("Creating database tables...");
+    console.log("Initializing database...");
+    
+    // Check if tables already exist
+    const tablesExist = await checkTablesExist();
+    
+    if (tablesExist) {
+      console.log("Database already initialized");
+      return true;
+    }
     
     // Create products table
     await execQueryAsync(`
@@ -91,6 +101,7 @@ export const initDatabase = async () => {
         stock INTEGER NOT NULL
       );
     `);
+    console.log("Products table created");
 
     // Create sales table
     await execQueryAsync(`
@@ -100,6 +111,7 @@ export const initDatabase = async () => {
         total REAL NOT NULL
       );
     `);
+    console.log("Sales table created");
 
     // Create sales_products relationship table
     await execQueryAsync(`
@@ -113,17 +125,11 @@ export const initDatabase = async () => {
         FOREIGN KEY (producto_id) REFERENCES productos (id) ON DELETE RESTRICT
       );
     `);
+    console.log("Sales-products table created");
     
-    console.log("Database tables created successfully");
-    isInitialized = true;
     return true;
   } catch (error) {
     console.error('Error initializing database:', error);
     throw error;
   }
 };
-
-// Initialize database when module is imported, but don't wait for it
-initDatabase().catch(error => {
-  console.error("Failed to initialize database:", error);
-});
