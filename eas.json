@@ -1,4 +1,8 @@
 {
+  "cli": {
+    "version": ">= 5.9.1",
+    "appVersionSource": "remote"
+  },
   "build": {
     "development": {
       "developmentClient": true,
@@ -7,13 +11,21 @@
     "preview": {
       "distribution": "internal",
       "android": {
-        "buildType": "apk"
+        "buildType": "apk",
+        "gradleCommand": ":app:assembleRelease",
+        "artifactPath": "android/app/build/outputs/apk/release/QuickSale-v${VERSION_NAME}.apk"
       }
     },
     "production": {
+      "autoIncrement": true,
       "android": {
-        "buildType": "app-bundle"
+        "buildType": "app-bundle",
+        "gradleCommand": ":app:bundleRelease",
+        "artifactPath": "android/app/build/outputs/bundle/release/QuickSale-v${VERSION_NAME}.aab"
       }
     }
+  },
+  "submit": {
+    "production": {}
   }
 }

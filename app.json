@@ -20,15 +20,19 @@
         "foregroundImage": "./assets/quicksale-app-icon.png",
         "backgroundColor": "#2C3E50"
       },
-      "package": "com.yourcompany.quicksale",
-      "versionCode": 1,
-      "permissions": []
+      "package": "com.yourcompany.quicksale"
     },
     "web": {
       "favicon": "./assets/quicksale-favicon.png"
     },
     "plugins": [
       "expo-sqlite"
-    ]
+    ],
+    "extra": {
+      "eas": {
+        "projectId": "aa751446-2b1a-4a62-a8ea-997180e934f2"
+      }
+    },
+    "owner": "nix2207"
   }
 }
