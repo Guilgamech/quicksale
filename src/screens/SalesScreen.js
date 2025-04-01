@@ -1,8 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, FlatList, Alert, Modal, TextInput, TouchableOpacity, ScrollView, SafeAreaView } from 'react-native';
-import { Button, Card } from '../components';
+import Button from '../components/Button';
+import Card from '../components/Card';
 import { getProductos } from '../database/productos';
 import { createVenta } from '../database/ventas';
+import styles from './styles/SalesScreenStyles';
 
 const SalesScreen = () => {
   const [productos, setProductos] = useState([]);
@@ -173,37 +175,31 @@ const SalesScreen = () => {
   };
 
   return (
-    <SafeAreaView className="flex-1 bg-background">
-      <View className="bg-primary pt-safe-top pb-4 px-5" style={{
-        shadowColor: '#000',
-        shadowOffset: { width: 0, height: 2 },
-        shadowOpacity: 0.1,
-        shadowRadius: 4,
-        elevation: 3
-      }}>
-        <View className="container mx-auto">
-          <Text className="text-white text-2xl font-bold">Nueva Venta</Text>
+    <SafeAreaView style={styles.container}>
+      <View style={styles.header}>
+        <View style={styles.headerContent}>
+          <Text style={styles.headerTitle}>Nueva Venta</Text>
         </View>
       </View>
       
-      <View className="container mx-auto flex-1">
-        <View className="flex-row flex-1 h-full">
+      <View style={styles.content}>
+        <View style={styles.twoColumnLayout}>
           {/* Left side - Products list */}
-          <View className="w-1/2 p-4">
-            <Text className="text-lg font-bold mb-2">Productos Disponibles</Text>
+          <View style={styles.leftColumn}>
+            <Text style={styles.sectionTitle}>Productos Disponibles</Text>
             
             {/* Search bar */}
-            <View className="mb-3 bg-white rounded-lg border border-gray-300 flex-row items-center px-3 py-2">
-              <Text className="text-gray-500 mr-2">🔍</Text>
+            <View style={styles.searchBar}>
+              <Text style={styles.searchIcon}>🔍</Text>
               <TextInput
-                className="flex-1"
+                style={styles.searchInput}
                 placeholder="Buscar producto..."
                 value={searchQuery}
                 onChangeText={setSearchQuery}
               />
               {searchQuery.length > 0 && (
                 <TouchableOpacity onPress={() => setSearchQuery('')}>
-                  <Text className="text-gray-500 font-bold">×</Text>
+                  <Text style={styles.clearSearch}>×</Text>
                 </TouchableOpacity>
               )}
             </View>
@@ -217,27 +213,20 @@ const SalesScreen = () => {
                   subtitle={`Stock: ${item.stock} unidades`}
                   value={`$${item.precio.toFixed(2)}`}
                   variant="primary"
-                  className="mb-2"
-                  style={{
-                    shadowColor: '#000',
-                    shadowOffset: { width: 0, height: 2 },
-                    shadowOpacity: 0.1,
-                    shadowRadius: 3,
-                    elevation: 2
-                  }}
+                  style={styles.productCard}
                 >
                   <TouchableOpacity
-                    className="bg-primary rounded-md py-1 px-2 mt-2"
+                    style={styles.addToCartButton}
                     onPress={() => handleAddToCart(item)}
                   >
-                    <Text className="text-white text-center">Agregar</Text>
+                    <Text style={styles.addToCartText}>Agregar</Text>
                   </TouchableOpacity>
                 </Card>
               )}
               refreshing={loading}
               onRefresh={loadProductos}
               ListEmptyComponent={
-                <Text className="text-center text-gray-500 py-4">
+                <Text style={styles.emptyText}>
                   {loading ? 'Cargando productos...' : searchQuery.length > 0 ? 'No se encontraron productos' : 'No hay productos disponibles'}
                 </Text>
               }
@@ -245,55 +234,57 @@ const SalesScreen = () => {
           </View>
           
           {/* Right side - Cart */}
-          <View className="w-1/2 bg-white h-full" style={{
-            shadowColor: '#000',
-            shadowOffset: { width: -2, height: 0 },
-            shadowOpacity: 0.05,
-            shadowRadius: 3,
-            elevation: 2
-          }}>
-            <View className="p-4 flex-1 h-full">
-              <Text className="text-lg font-bold mb-2">Carrito de Compra</Text>
-              
+          <View style={styles.rightColumn}>
+            <Text style={styles.sectionTitle}>Carrito de Compra</Text>
+            
+            <View style={styles.cartContainer}>
               {carrito.length > 0 ? (
-                <ScrollView className="mb-4 flex-1 ">
+                <ScrollView style={styles.cartScroll}>
                   {carrito.map((item, index) => (
-                    <View key={index} className="flex-row justify-between items-center border-b border-gray-200 py-2">
-                      <View className="flex-1">
-                        <Text className="font-medium">{item.nombre}</Text>
-                        <Text className="text-sm text-gray-600">
+                    <View key={index} style={styles.cartItem}>
+                      <View style={styles.cartItemInfo}>
+                        <Text style={styles.cartItemName}>{item.nombre}</Text>
+                        <Text style={styles.cartItemDetails}>
                           {item.cantidad} x ${item.precio.toFixed(2)}
                         </Text>
                       </View>
-                      <Text className="font-bold">${item.subtotal.toFixed(2)}</Text>
-                      <TouchableOpacity
-                        className="ml-2 bg-danger rounded-full w-6 h-6 items-center justify-center"
-                        onPress={() => removeFromCart(index)}
-                      >
-                        <Text className="text-white font-bold">×</Text>
-                      </TouchableOpacity>
+                      <View style={styles.cartItemActions}>
+                        <Text style={styles.cartItemSubtotal}>
+                          ${item.subtotal.toFixed(2)}
+                        </Text>
+                        <TouchableOpacity
+                          style={styles.removeButton}
+                          onPress={() => removeFromCart(index)}
+                        >
+                          <Text style={styles.removeButtonText}>×</Text>
+                        </TouchableOpacity>
+                      </View>
                     </View>
                   ))}
                 </ScrollView>
               ) : (
-                <View className="flex-1 justify-center">
-                  <Text className="text-center text-gray-500">
-                    No hay productos en el carrito
+                <View style={styles.emptyCart}>
+                  <Text style={styles.emptyCartText}>
+                    El carrito está vacío
+                  </Text>
+                  <Text style={styles.emptyCartSubtext}>
+                    Agrega productos desde la lista
                   </Text>
                 </View>
               )}
               
-              <View className="border-t border-gray-300 pt-2">
-                <View className="flex-row justify-between mb-2">
-                  <Text className="font-bold">Total:</Text>
-                  <Text className="font-bold text-xl">${calcularTotal().toFixed(2)}</Text>
+              <View style={styles.cartFooter}>
+                <View style={styles.totalContainer}>
+                  <Text style={styles.totalLabel}>Total:</Text>
+                  <Text style={styles.totalValue}>
+                    ${calcularTotal().toFixed(2)}
+                  </Text>
                 </View>
                 
                 <Button
-                  variant="primary"
+                  variant="success"
                   label="Finalizar Venta"
                   size="lg"
-                  className="w-full"
                   onPress={finalizarVenta}
                   disabled={carrito.length === 0}
                 />
@@ -302,7 +293,7 @@ const SalesScreen = () => {
           </View>
         </View>
       </View>
-
+      
       {/* Modal para agregar producto al carrito */}
       <Modal
         animationType="slide"
@@ -310,49 +301,48 @@ const SalesScreen = () => {
         visible={modalVisible}
         onRequestClose={() => setModalVisible(false)}
       >
-        <View className="flex-1 justify-center items-center bg-black/50">
-          <View className="bg-white w-[90%] rounded-xl p-6" style={{
-            shadowColor: '#000',
-            shadowOffset: { width: 0, height: 4 },
-            shadowOpacity: 0.25,
-            shadowRadius: 10,
-            elevation: 5
-          }}>
-            <Text className="text-2xl font-bold mb-4 text-center">
+        <View style={styles.modalOverlay}>
+          <View style={styles.modalContent}>
+            <Text style={styles.modalTitle}>
               Agregar al Carrito
             </Text>
             
             {currentProduct && (
-              <View className="mb-4">
-                <Text className="text-lg font-medium">{currentProduct.nombre}</Text>
-                <Text className="text-gray-600">Precio: ${currentProduct.precio.toFixed(2)}</Text>
-                <Text className="text-gray-600">Stock disponible: {currentProduct.stock}</Text>
+              <View style={styles.modalProductInfo}>
+                <Text style={styles.modalProductName}>{currentProduct.nombre}</Text>
+                <Text style={styles.modalProductPrice}>
+                  Precio: ${currentProduct.precio.toFixed(2)}
+                </Text>
+                <Text style={styles.modalProductStock}>
+                  Stock disponible: {currentProduct.stock}
+                </Text>
               </View>
             )}
             
-            <View className="mb-6">
-              <Text className="text-gray-700 mb-1">Cantidad:</Text>
+            <View style={styles.formGroup}>
+              <Text style={styles.label}>Cantidad:</Text>
               <TextInput
-                className="border border-gray-300 rounded-lg p-3 bg-gray-50"
+                style={styles.input}
                 value={cantidad}
                 onChangeText={setCantidad}
-                placeholder="1"
                 keyboardType="number-pad"
+                placeholder="1"
               />
             </View>
             
-            <View className="flex-row justify-end">
+            <View style={styles.modalButtons}>
               <Button
                 variant="secondary"
                 label="Cancelar"
                 size="md"
-                className="mr-3"
+                style={styles.modalButton}
                 onPress={() => setModalVisible(false)}
               />
               <Button
                 variant="primary"
                 label="Agregar"
                 size="md"
+                style={styles.modalButton}
                 onPress={addProductToCart}
               />
             </View>

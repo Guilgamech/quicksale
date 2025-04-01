@@ -1,5 +1,6 @@
 import React from 'react';
-import { View, Text, StyleSheet } from 'react-native';
+import { View, Text } from 'react-native';
+import styles from './styles/CardStyles';
 
 const Card = ({ 
   title, 
@@ -7,7 +8,7 @@ const Card = ({
   value, 
   variant = 'primary', 
   children, 
-  className = '', 
+  className = '', // Mantener para compatibilidad, pero no se usará
   style = {},
   contentStyle = {},
   titleStyle = {},
@@ -15,34 +16,35 @@ const Card = ({
 }) => {
   // Map variant to color
   const variantColors = {
-    primary: '#3B82F6',
-    secondary: '#6B7280',
-    success: '#10B981',
-    danger: '#EF4444',
-    warning: '#F59E0B',
-    accent: '#8B5CF6',
+    primary: '#2C3E50',
+    secondary: '#34495E',
+    success: '#27AE60',
+    danger: '#E74C3C',
+    warning: '#F39C12',
+    accent: '#3498DB',
   };
   
   const color = variantColors[variant] || variantColors.primary;
   
   return (
     <View 
-      className={`bg-white rounded-xl overflow-hidden ${className}`}
-      style={[{
-        shadowColor: '#000',
-        shadowOffset: { width: 0, height: 2 },
-        shadowOpacity: 0.1,
-        shadowRadius: 3,
-        elevation: 2,
-        borderLeftWidth: 4,
-        borderLeftColor: color,
-      }, style]}
+      style={[
+        styles.card,
+        {
+          borderLeftWidth: 4,
+          borderLeftColor: color,
+        }, 
+        style
+      ]}
     >
-      <View className="p-4" style={contentStyle}>
+      <View style={[styles.content, contentStyle]}>
         {title && (
           <Text 
-            className="font-bold text-gray-700 mb-1" 
-            style={[{ color: color }, titleStyle]}
+            style={[
+              styles.title, 
+              { color: color }, 
+              titleStyle
+            ]}
           >
             {title}
           </Text>
@@ -50,15 +52,17 @@ const Card = ({
         
         {value && (
           <Text 
-            className="text-2xl font-bold text-gray-800" 
-            style={valueStyle}
+            style={[
+              styles.value,
+              valueStyle
+            ]}
           >
             {value}
           </Text>
         )}
         
         {subtitle && (
-          <Text className="text-gray-500 text-sm">
+          <Text style={styles.subtitle}>
             {subtitle}
           </Text>
         )}

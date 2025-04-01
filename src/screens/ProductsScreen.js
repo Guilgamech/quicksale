@@ -3,6 +3,7 @@ import { View, Text, FlatList, Alert, Modal, TextInput, TouchableOpacity, SafeAr
 import Button from '../components/Button';
 import Card from '../components/Card';
 import { getProductos, createProducto, updateProducto, deleteProducto } from '../database/productos';
+import styles from './styles/ProductsScreenStyles';
 
 const ProductsScreen = () => {
   const [productos, setProductos] = useState([]);
@@ -129,35 +130,22 @@ const ProductsScreen = () => {
   };
 
   return (
-    <SafeAreaView className="flex-1 bg-background">
+    <SafeAreaView style={styles.container}>
       {/* Header with title */}
-      <View className="bg-primary pt-safe-top pb-4 px-5" style={{
-        shadowColor: '#000',
-        shadowOffset: { width: 0, height: 2 },
-        shadowOpacity: 0.1,
-        shadowRadius: 4,
-        elevation: 3
-      }}>
-        <View className="container mx-auto flex-row justify-between items-center">
-          <Text className="text-white text-2xl font-bold">Gestionar Inventario</Text>
+      <View style={styles.header}>
+        <View style={styles.headerContent}>
+          <Text style={styles.headerTitle}>Gestionar Inventario</Text>
         </View>
       </View>
       
-      <View className="container mx-auto px-5 py-6 flex-1">
-        <View className="flex-row justify-between items-center mb-6">
-          <Text className="text-2xl font-bold text-gray-800">Lista de Productos</Text>
+      <View style={styles.content}>
+        <View style={styles.titleContainer}>
+          <Text style={styles.title}>Lista de Productos</Text>
           <TouchableOpacity 
-            className="bg-primary rounded-md items-center justify-center px-4 py-2"
+            style={styles.addButton}
             onPress={handleAddProduct}
-            style={{
-              shadowColor: '#000',
-              shadowOffset: { width: 0, height: 2 },
-              shadowOpacity: 0.2,
-              shadowRadius: 3,
-              elevation: 4
-            }}
           >
-            <Text className="text-white text-xl font-bold">+</Text>
+            <Text style={styles.addButtonText}>+</Text>
           </TouchableOpacity>
         </View>
         
@@ -170,21 +158,14 @@ const ProductsScreen = () => {
               subtitle={`Stock: ${item.stock} unidades`}
               value={`$${item.precio.toFixed(2)}`}
               variant="primary"
-              className="mb-4"
-              style={{
-                shadowColor: '#000',
-                shadowOffset: { width: 0, height: 2 },
-                shadowOpacity: 0.1,
-                shadowRadius: 3,
-                elevation: 2
-              }}
+              style={styles.productCard}
             >
-              <View className="flex-row justify-end mt-3">
+              <View style={styles.buttonContainer}>
                 <Button
                   variant="secondary"
                   label="Editar"
                   size="md"
-                  className="mr-3"
+                  style={styles.editButton}
                   onPress={() => handleEditProduct(item)}
                 />
                 <Button
@@ -199,14 +180,8 @@ const ProductsScreen = () => {
           refreshing={loading}
           onRefresh={loadProductos}
           ListEmptyComponent={
-            <View className="bg-white p-6 rounded-xl" style={{
-              shadowColor: '#000',
-              shadowOffset: { width: 0, height: 2 },
-              shadowOpacity: 0.1,
-              shadowRadius: 3,
-              elevation: 2
-            }}>
-              <Text className="text-center text-gray-500 py-4 text-lg">
+            <View style={styles.emptyContainer}>
+              <Text style={styles.emptyText}>
                 {loading ? 'Cargando productos...' : 'No hay productos disponibles'}
               </Text>
               {!loading && (
@@ -214,7 +189,7 @@ const ProductsScreen = () => {
                   variant="primary"
                   label="Agregar primer producto"
                   size="lg"
-                  className="mt-3"
+                  style={styles.emptyButton}
                   onPress={handleAddProduct}
                 />
               )}
@@ -230,32 +205,26 @@ const ProductsScreen = () => {
         visible={modalVisible}
         onRequestClose={() => setModalVisible(false)}
       >
-        <View className="flex-1 justify-center items-center bg-black/50">
-          <View className="bg-white w-[90%] rounded-xl p-6" style={{
-            shadowColor: '#000',
-            shadowOffset: { width: 0, height: 4 },
-            shadowOpacity: 0.25,
-            shadowRadius: 10,
-            elevation: 5
-          }}>
-            <Text className="text-2xl font-bold mb-4 text-center">
+        <View style={styles.modalOverlay}>
+          <View style={styles.modalContent}>
+            <Text style={styles.modalTitle}>
               {currentProduct ? 'Editar Producto' : 'Nuevo Producto'}
             </Text>
             
-            <View className="mb-4">
-              <Text className="text-gray-700 mb-1">Nombre:</Text>
+            <View style={styles.formGroup}>
+              <Text style={styles.label}>Nombre:</Text>
               <TextInput
-                className="border border-gray-300 rounded-lg p-3 bg-gray-50"
+                style={styles.input}
                 value={formData.nombre}
                 onChangeText={(text) => handleChange('nombre', text)}
                 placeholder="Nombre del producto"
               />
             </View>
             
-            <View className="mb-4">
-              <Text className="text-gray-700 mb-1">Precio:</Text>
+            <View style={styles.formGroup}>
+              <Text style={styles.label}>Precio:</Text>
               <TextInput
-                className="border border-gray-300 rounded-lg p-3 bg-gray-50"
+                style={styles.input}
                 value={formData.precio}
                 onChangeText={(text) => handleChange('precio', text)}
                 placeholder="0.00"
@@ -263,10 +232,10 @@ const ProductsScreen = () => {
               />
             </View>
             
-            <View className="mb-6">
-              <Text className="text-gray-700 mb-1">Stock:</Text>
+            <View style={styles.formGroup}>
+              <Text style={styles.label}>Stock:</Text>
               <TextInput
-                className="border border-gray-300 rounded-lg p-3 bg-gray-50"
+                style={styles.input}
                 value={formData.stock}
                 onChangeText={(text) => handleChange('stock', text)}
                 placeholder="0"
@@ -274,18 +243,19 @@ const ProductsScreen = () => {
               />
             </View>
             
-            <View className="flex-row justify-end">
+            <View style={styles.modalButtons}>
               <Button
                 variant="secondary"
                 label="Cancelar"
                 size="md"
-                className="mr-3"
+                style={styles.modalButton}
                 onPress={() => setModalVisible(false)}
               />
               <Button
                 variant="primary"
                 label="Guardar"
                 size="md"
+                style={styles.modalButton}
                 onPress={handleSaveProduct}
               />
             </View>

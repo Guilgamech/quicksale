@@ -1,12 +1,22 @@
-// Configuración del estado global con Zustand
 import { create } from 'zustand';
 
-// Store de ejemplo
-export const useStore = create((set) => ({
-  // Estado inicial
-  count: 0,
+// Store para la aplicación QuickSale
+export const useAppStore = create((set) => ({
+  // Estado de la aplicación
+  currentView: 'home',
+  cartItems: [],
+  
   // Acciones
-  increment: () => set((state) => ({ count: state.count + 1 })),
-  decrement: () => set((state) => ({ count: state.count - 1 })),
-  reset: () => set({ count: 0 }),
+  setCurrentView: (view) => set({ currentView: view }),
+  
+  // Acciones para el carrito
+  addToCart: (product, quantity) => set((state) => ({
+    cartItems: [...state.cartItems, { ...product, quantity }]
+  })),
+  
+  removeFromCart: (productId) => set((state) => ({
+    cartItems: state.cartItems.filter(item => item.id !== productId)
+  })),
+  
+  clearCart: () => set({ cartItems: [] }),
 }));

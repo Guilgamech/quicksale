@@ -3,7 +3,7 @@ import { StatusBar } from 'expo-status-bar';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
-import { Image, Text, View, ActivityIndicator, Alert } from 'react-native';
+import { Image, Text, View, ActivityIndicator, Alert, StyleSheet } from 'react-native';
 import * as FileSystem from 'expo-file-system';
 
 // Import screens
@@ -50,9 +50,9 @@ export default function App() {
 
   if (isLoading) {
     return (
-      <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: '#ECF0F1' }}>
+      <View style={styles.loadingContainer}>
         <ActivityIndicator size="large" color="#2C3E50" />
-        <Text style={{ marginTop: 20, color: '#2C3E50' }}>Iniciando QuickSale...</Text>
+        <Text style={styles.loadingText}>Iniciando QuickSale...</Text>
       </View>
     );
   }
@@ -122,3 +122,16 @@ export default function App() {
     </SafeAreaProvider>
   );
 }
+
+const styles = StyleSheet.create({
+  loadingContainer: {
+    flex: 1, 
+    justifyContent: 'center', 
+    alignItems: 'center', 
+    backgroundColor: '#ECF0F1'
+  },
+  loadingText: {
+    marginTop: 20, 
+    color: '#2C3E50'
+  }
+});

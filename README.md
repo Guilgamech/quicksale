@@ -2,10 +2,6 @@
 
 ![QuickSale Logo](./assets/quicksale-app-icon.png)
 
-## Descripción
-
-QuickSale es una aplicación móvil para gestión de ventas y control de inventario, diseñada para pequeños negocios. Permite administrar productos, registrar ventas y generar informes de manera sencilla y eficiente.
-
 ## Características
 
 - **Gestión de Productos**: Añadir, editar y eliminar productos con información de precio y stock.
@@ -19,7 +15,6 @@ QuickSale es una aplicación móvil para gestión de ventas y control de inventa
 - React Native
 - Expo
 - SQLite (para almacenamiento local)
-- NativeWind (Tailwind CSS para React Native)
 - React Navigation
 
 ## Requisitos
@@ -34,3 +29,4 @@ QuickSale es una aplicación móvil para gestión de ventas y control de inventa
 ```bash
 git clone https://github.com/tu-usuario/quicksale.git
 cd quicksale
+```
