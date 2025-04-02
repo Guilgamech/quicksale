@@ -1,14 +1,14 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import { View, Text, ScrollView, TouchableOpacity, SafeAreaView, Image } from 'react-native';
 import { useRouter, useFocusEffect } from 'expo-router';
-import Button from '../components/Button';
-import { getVentas } from '../database/ventas';
-import { getProductos } from '../database/productos';
-import styles from './styles/HomeScreenStyles';
+import Button from '../src/components/Button';
+import { getVentas } from '../src/database/ventas';
+import { getProductos } from '../src/database/productos';
+import styles from '../src/screens/styles/HomeScreenStyles';
 
-const HomeScreen = () => {
+export default function HomeScreen() {
   const router = useRouter();
-  const [stats, setStats] = useState({
+  const [stats, setStats] = React.useState({
     ventas: 0,
     ingresos: 0,
     productos: 0,
@@ -56,7 +56,7 @@ const HomeScreen = () => {
       <View style={styles.header}>
         <View style={styles.headerContent}>
           <Image 
-            source={require('../../assets/quicksale-in-app-logo.png')} 
+            source={require('../assets/quicksale-in-app-logo.png')} 
             style={styles.logo}
           />
           <Text style={styles.headerTitle}>QuickSale</Text>
@@ -127,6 +127,4 @@ const HomeScreen = () => {
       </ScrollView>
     </SafeAreaView>
   );
-};
-
-export default HomeScreen;
+}

@@ -1,11 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, FlatList, Alert, Modal, TextInput, TouchableOpacity, SafeAreaView } from 'react-native';
+import { useRouter } from 'expo-router';
 import Button from '../components/Button';
 import Card from '../components/Card';
 import { getProductos, createProducto, updateProducto, deleteProducto } from '../database/productos';
 import styles from './styles/ProductsScreenStyles';
 
 const ProductsScreen = () => {
+  const router = useRouter();
   const [productos, setProductos] = useState([]);
   const [loading, setLoading] = useState(true);
   const [modalVisible, setModalVisible] = useState(false);
@@ -128,6 +130,12 @@ const ProductsScreen = () => {
       ]
     );
   };
+
+  // Update any navigation.navigate calls to router.push
+  // For example:
+  // const goBack = () => {
+  //   router.push('/');
+  // };
 
   return (
     <SafeAreaView style={styles.container}>

@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, FlatList, TouchableOpacity, SafeAreaView, Alert } from 'react-native';
+import { useRouter } from 'expo-router';
 import { getVentas } from '../database/ventas';
 import Card from '../components/Card';
 import Button from '../components/Button';
@@ -8,6 +9,7 @@ import * as Sharing from 'expo-sharing';
 import styles from './styles/ReportsScreenStyles';
 
 const ReportsScreen = () => {
+  const router = useRouter();
   const [ventas, setVentas] = useState([]);
   const [loading, setLoading] = useState(true);
   const [selectedPeriod, setSelectedPeriod] = useState('today');
@@ -137,6 +139,12 @@ const ReportsScreen = () => {
     />
   );
   
+  // Update any navigation.navigate calls to router.push
+  // For example:
+  // const goToHome = () => {
+  //   router.push('/');
+  // };
+
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.header}>

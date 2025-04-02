@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, FlatList, Alert, Modal, TextInput, TouchableOpacity, ScrollView, SafeAreaView } from 'react-native';
+import { useRouter } from 'expo-router';
 import Button from '../components/Button';
 import Card from '../components/Card';
 import { getProductos } from '../database/productos';
@@ -7,6 +8,7 @@ import { createVenta } from '../database/ventas';
 import styles from './styles/SalesScreenStyles';
 
 const SalesScreen = () => {
+  const router = useRouter();
   const [productos, setProductos] = useState([]);
   const [filteredProductos, setFilteredProductos] = useState([]);
   const [carrito, setCarrito] = useState([]);
@@ -173,6 +175,12 @@ const SalesScreen = () => {
       Alert.alert('Error', error.message);
     }
   };
+
+  // Update any navigation.navigate calls to router.push
+  // For example:
+  // const goToHome = () => {
+  //   router.push('/');
+  // };
 
   return (
     <SafeAreaView style={styles.container}>
